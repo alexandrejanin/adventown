@@ -2,8 +2,8 @@
 	public string Name { get; }
 	public ItemRarity Rarity { get; }
 
-	protected Item(string name, ItemRarity rarity) {
-		Name = name;
+	protected Item(ItemRarity rarity) {
+		Name = NameGenerator.WeaponName();
 		Rarity = rarity;
 	}
 

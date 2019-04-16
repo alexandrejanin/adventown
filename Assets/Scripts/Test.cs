@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
 
 public class Test : MonoBehaviour {
-	private void Start() {
-		NameGenerator.Save();
+	private Hero hero;
 
-		var enemy = new Enemy(1);
-		Debug.Log(enemy.Name);
+	private void Start() {
+		hero = new Hero(1);
+		hero.OnStateChanged += (hero, state) => Debug.Log(hero + " switched to " + state);
+	}
+
+	private void Update() {
+		hero.Update(Time.deltaTime);
 	}
 }

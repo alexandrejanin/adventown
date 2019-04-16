@@ -33,6 +33,18 @@
 		if (fill || CurrentValue > size) CurrentValue = size;
 	}
 
+	public static implicit operator int(ResourceBar resourceBar) => resourceBar.CurrentValue;
+
+	public static ResourceBar operator +(ResourceBar resourceBar, int rhs) {
+		resourceBar.CurrentValue += rhs;
+		return resourceBar;
+	}
+
+	public static ResourceBar operator -(ResourceBar resourceBar, int rhs) {
+		resourceBar.CurrentValue -= rhs;
+		return resourceBar;
+	}
+
 	public override string ToString() {
 		return $"{CurrentValue}/{Size}";
 	}
