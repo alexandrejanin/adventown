@@ -7,4 +7,8 @@
 	private ResourceBar Stamina { get; }
 
 	public Weapon Weapon { get; private set; }
+
+	public Hero(int level) {
+		
+	}
 }

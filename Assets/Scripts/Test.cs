@@ -2,9 +2,9 @@
 
 public class Test : MonoBehaviour {
 	private void Start() {
-		var test = new ResourceBar(10) {CurrentValue = 4};
-		test.CurrentValue--;
-		Debug.Log(test);
-		Debug.Log(test.Ratio);
+		NameGenerator.Save();
+
+		var enemy = new Enemy(1);
+		Debug.Log(enemy.Name);
 	}
 }
