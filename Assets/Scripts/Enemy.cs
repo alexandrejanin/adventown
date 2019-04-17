@@ -1,31 +1,52 @@
-﻿using UnityEngine;
+﻿using StateMachines;
+using StateMachines.EnemyStates;
+using UnityEngine;
 
-public sealed class Enemy {
-	public string Name { get; }
+public sealed class Enemy : CombatEntity {
+	public int Level { get; private set; }
+	public int Gold { get; private set; }
 
-	public int Level { get; }
-	public ResourceBar Health { get; private set; }
 
-	public float Speed { get; }
-	public int Damage { get; }
+	public float Speed { get; private set; }
+	public int Damage { get; private set; }
+	protected override int AttackDamage => Damage;
 
-	public Enemy(int level) {
-		Name = NameGenerator.EnemyName();
-		Level = level;
-		Health = new ResourceBar(GetHealth(level));
-		Speed = GetSpeed(level);
-		Damage = GetDamage(level);
+
+	private State<Enemy> state;
+
+	public State<Enemy> State {
+		get => state;
+		set {
+			if (value != state) OnStateChanged?.Invoke(this, value);
+			state = value;
+		}
 	}
 
-	public void Hit(Weapon weapon) {
-		Health -= weapon.Damage;
+
+	public delegate void OnStateChange(Enemy enemy, State<Enemy> state);
+
+	public event OnStateChange OnStateChanged;
+
+	public void Start() {
+		name = NameGenerator.EnemyName();
+		SetStats(1);
+
+		OnStateChanged += (enemy, state) => Debug.Log($"{enemy} is now {state.Description}");
+		State = new Idle(this);
+	}
+
+	public void Update() {
+		State = State.Update();
+	}
+
+	private void SetStats(int level) {
+		Level = level;
+		Health = new ResourceBar(StatsGenerator.GetEnemyHealth(level));
+		Speed = StatsGenerator.GetEnemySpeed(level);
+		Damage = StatsGenerator.GetEnemyDamage(level);
 	}
 
 	public override string ToString() {
-		return $"Level {Level} {Name} {Health}HP";
+		return $"Level {Level} {name} {Health}HP";
 	}
-
-	private static int GetHealth(int level) => Mathf.RoundToInt((4 + level) * Random.Range(0.85f, 1.15f));
-	private static float GetSpeed(int level) => (3 - 2 * level / 100f) * Random.Range(0.85f, 1.15f);
-	private static int GetDamage(int level) => Mathf.RoundToInt((1 + level) * Random.Range(0.85f, 1.15f));
 }

@@ -1,4 +1,5 @@
-﻿public struct ResourceBar {
+﻿[System.Serializable]
+public struct ResourceBar {
 	public int Size { get; private set; }
 
 	private int currentValue;

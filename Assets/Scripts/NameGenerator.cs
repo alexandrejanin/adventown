@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Xml.Serialization;
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class NameGenerator {
 	private static readonly string[] HeroNames = {"John", "Tom", "Bob"};

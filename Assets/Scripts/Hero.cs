@@ -1,43 +1,51 @@
-﻿using HeroStates;
+﻿using StateMachines;
+using StateMachines.HeroStates;
 using UnityEngine;
 
-public sealed class Hero {
-	public string Name { get; private set; }
+public sealed class Hero : CombatEntity {
+	public int Level { get; private set; }
+	public int Gold { get; set; }
 
-	public int Level { get; }
-	public int Gold { get; }
+	public ResourceBar Stamina { get; private set; }
 
-	public ResourceBar Health { get; }
-	public ResourceBar Stamina { get; }
+	public Weapon Weapon { get; private set; }
+	protected override int AttackDamage => Weapon.Damage;
 
-	public Weapon Weapon { get; }
+	private State<Hero> state;
 
-	public HeroState State { get; private set; }
+	public State<Hero> State {
+		get => state;
+		set {
+			var oldState = state;
+			state = value;
+			if (oldState != state) OnStateChanged?.Invoke(this, state);
+		}
+	}
 
-	public delegate void OnStateChange(Hero hero, HeroState state);
+	public delegate void OnStateChange(Hero hero, State<Hero> state);
 
 	public event OnStateChange OnStateChanged;
 
-	public Hero(int level) {
-		Name = NameGenerator.HeroName();
-		Level = level;
-		Gold = 0;
-		Health = new ResourceBar(GetHealth(level));
-		Stamina = new ResourceBar(GetStamina(level));
-		Weapon = new Weapon(level);
-		State = new Roaming(this, 2);
+	public void Start() {
+		name = NameGenerator.HeroName();
+		SetStats(1);
+
+		OnStateChanged += (hero, state) => Debug.Log($"{hero} is now {state.Description}");
+		State = new Roaming(this);
 	}
 
-	public void Update(float deltaTime) {
-		var newState = State.Update(deltaTime);
-		if (newState != State) OnStateChanged?.Invoke(this, newState);
-		State = newState;
+	public void Update() {
+		State = State.Update();
+	}
+
+	private void SetStats(int level) {
+		Level = level;
+		Health = new ResourceBar(StatsGenerator.GetHeroHealth(level));
+		Stamina = new ResourceBar(StatsGenerator.GetHeroStamina(level));
+		Weapon = new Weapon(level);
 	}
 
 	public override string ToString() {
-		return $"Level {Level} {Name} {Health}HP";
+		return $"Level {Level} {name}";
 	}
-
-	private static int GetHealth(int level) => Mathf.RoundToInt((18 + 2 * level) * Random.Range(0.85f, 1.15f));
-	private static int GetStamina(int level) => Mathf.RoundToInt((10 + 2 * level) * Random.Range(0.85f, 1.15f));
 }
