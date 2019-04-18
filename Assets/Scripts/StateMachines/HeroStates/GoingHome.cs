@@ -3,10 +3,10 @@
 		public override string ShortDescription => "Going back to town";
 		public override string Description => "Going back to town";
 
-		public GoingHome(Hero owner) : base(owner) { }
+		public GoingHome(Hero character) : base(character) { }
 
 		public override State<Hero> Update() {
-			return new Roaming(owner);
+			return new Roaming(character);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 using StateMachines.HeroStates;
 using UnityEngine;
 
-public sealed class Hero : CombatEntity {
+public sealed class Hero : Character {
 	public int Level { get; private set; }
 	public int Gold { get; set; }
 

@@ -2,7 +2,7 @@
 using StateMachines.EnemyStates;
 using UnityEngine;
 
-public sealed class Enemy : CombatEntity {
+public sealed class Enemy : Character {
 	public int Level { get; private set; }
 	public int Gold { get; private set; }
 

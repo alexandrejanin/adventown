@@ -16,8 +16,8 @@ namespace StateMachines.HeroStates {
 		public override string ShortDescription => "Roaming";
 		public override string Description => "Roaming";
 
-		public Roaming(Hero owner) : base(owner) {
-			agent = owner.GetComponent<NavMeshAgent>();
+		public Roaming(Hero character) : base(character) {
+			agent = character.GetComponent<NavMeshAgent>();
 			agent.stoppingDistance = CombatDist;
 		}
 
@@ -25,7 +25,7 @@ namespace StateMachines.HeroStates {
 			// Look for nearest valid enemy
 			if (nearestEnemy == null)
 				foreach (var enemy in Object.FindObjectsOfType<Enemy>().Where(IsValid))
-					if (nearestEnemy == null || (owner.transform.position - enemy.transform.position).magnitude < (owner.transform.position - nearestEnemy.transform.position).magnitude)
+					if (nearestEnemy == null || (character.transform.position - enemy.transform.position).magnitude < (character.transform.position - nearestEnemy.transform.position).magnitude)
 						nearestEnemy = enemy;
 
 			// if enemy found
@@ -33,12 +33,12 @@ namespace StateMachines.HeroStates {
 				wanderTimer = 0;
 
 				agent.SetDestination(nearestEnemy.transform.position);
-				if ((owner.transform.position - nearestEnemy.transform.position).magnitude > CombatDist)
+				if ((character.transform.position - nearestEnemy.transform.position).magnitude > CombatDist)
 					return this;
 
 				// if close enough, start combat
-				nearestEnemy.State = new EnemyStates.Combat(nearestEnemy, owner);
-				return new Combat(owner, nearestEnemy);
+				nearestEnemy.State = new EnemyStates.Combat(nearestEnemy, character);
+				return new Combat(character, nearestEnemy);
 			}
 
 			// No enemy found, wander
@@ -58,7 +58,7 @@ namespace StateMachines.HeroStates {
 		}
 
 		private bool IsValid(Enemy enemy) {
-			return !(enemy.State is EnemyStates.Dead) && Mathf.Abs(owner.Level - enemy.Level) < MaxLevelDifference;
+			return !(enemy.State is EnemyStates.Dead) && Mathf.Abs(character.Level - enemy.Level) < MaxLevelDifference;
 		}
 	}
 }

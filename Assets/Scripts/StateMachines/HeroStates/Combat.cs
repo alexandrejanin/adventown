@@ -8,33 +8,38 @@ namespace StateMachines.HeroStates {
 		public override string ShortDescription => "In combat";
 		public override string Description => $"Fighting {enemy}";
 
-		public Combat(Hero owner, Enemy enemy) : base(owner) {
+		public Combat(Hero character, Enemy enemy) : base(character) {
 			this.enemy = enemy;
 		}
 
 		public override State<Hero> Update() {
 			if (enemy == null)
-				return new Roaming(owner);
+				return new Roaming(character);
 
 			if (enemy.Health.Empty) {
-				owner.Gold += enemy.Gold;
-				return new Roaming(owner);
+				character.Gold += enemy.Gold;
+				return new Roaming(character);
 			}
 
-			if (owner.Weapon == null)
-				return new Roaming(owner);
+			if (character.Weapon == null)
+				return new Roaming(character);
 
-			if (owner.Health.Empty)
-				return new Dead(owner);
+			if (character.Health.Empty)
+				return new Dead(character);
 
-			if (owner.Stamina.Empty)
-				return new GoingHome(owner);
+			if (character.Stamina.Empty)
+				return new GoingHome(character);
 
+			character.transform.rotation = Quaternion.Lerp(
+				character.transform.rotation,
+				Quaternion.LookRotation(enemy.transform.position),
+				Time.deltaTime
+			);
 
 			attackTimer += Time.deltaTime;
-			if (attackTimer < owner.Weapon.Speed) return this;
+			if (attackTimer < character.Weapon.Speed) return this;
 
-			enemy.Hit(owner);
+			enemy.Hit(character);
 			attackTimer = 0;
 
 			return this;

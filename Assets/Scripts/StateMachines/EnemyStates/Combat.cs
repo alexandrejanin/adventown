@@ -8,19 +8,19 @@ namespace StateMachines.EnemyStates {
 		public override string ShortDescription => "In combat";
 		public override string Description => "Combat";
 
-		public Combat(Enemy owner, Hero hero) : base(owner) => Hero = hero;
+		public Combat(Enemy character, Hero hero) : base(character) => Hero = hero;
 
 		public override State<Enemy> Update() {
-			if (owner.Health.Empty)
-				return new Dead(owner);
+			if (character.Health.Empty)
+				return new Dead(character);
 
 			if (Hero == null || Hero.Health.Empty || Hero.Stamina.Empty)
-				return new Idle(owner);
+				return new Idle(character);
 
 			AttackTimer += Time.deltaTime;
 
-			if (AttackTimer >= owner.Speed) {
-				Hero.Hit(owner);
+			if (AttackTimer >= character.Speed) {
+				Hero.Hit(character);
 				AttackTimer = 0;
 			}
 

@@ -8,12 +8,12 @@ namespace StateMachines.EnemyStates {
 		public override string ShortDescription => "Dead";
 		public override string Description => "Dead";
 
-		public Dead(Enemy owner) : base(owner) { }
+		public Dead(Enemy character) : base(character) { }
 
 		public override State<Enemy> Update() {
 			timer += Time.deltaTime;
 			if (timer > DeathDelay)
-				Object.Destroy(owner.gameObject);
+				Object.Destroy(character.gameObject);
 
 			return this;
 		}
