@@ -30,12 +30,6 @@ namespace StateMachines.HeroStates {
 			if (character.Stamina.Empty)
 				return new GoingHome(character);
 
-			character.transform.rotation = Quaternion.Lerp(
-				character.transform.rotation,
-				Quaternion.LookRotation(enemy.transform.position),
-				Time.deltaTime
-			);
-
 			attackTimer += Time.deltaTime;
 			if (attackTimer < character.Weapon.Speed) return this;
 

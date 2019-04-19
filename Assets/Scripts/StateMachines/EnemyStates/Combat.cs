@@ -6,7 +6,7 @@ namespace StateMachines.EnemyStates {
 		private float AttackTimer { get; set; }
 
 		public override string ShortDescription => "In combat";
-		public override string Description => "Combat";
+		public override string Description => $"Fighting {Hero}";
 
 		public Combat(Enemy character, Hero hero) : base(character) => Hero = hero;
 

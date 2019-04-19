@@ -13,7 +13,7 @@ public sealed class Hero : Character {
 
 	private State<Hero> state;
 
-	public State<Hero> State {
+	private State<Hero> State {
 		get => state;
 		set {
 			var oldState = state;
@@ -22,20 +22,27 @@ public sealed class Hero : Character {
 		}
 	}
 
+	public int Cost => 2 * Level;
+
 	public delegate void OnStateChange(Hero hero, State<Hero> state);
 
 	public event OnStateChange OnStateChanged;
 
-	public void Start() {
+	public void Awake() {
 		name = NameGenerator.HeroName();
 		SetStats(1);
-
-		OnStateChanged += (hero, state) => Debug.Log($"{hero} is now {state.Description}");
-		State = new Roaming(this);
+		gameObject.SetActive(false);
 	}
 
 	public void Update() {
 		State = State.Update();
+	}
+
+	public void Spawn(Vector3 position) {
+		transform.position = position;
+		State = new Roaming(this);
+		gameObject.SetActive(true);
+		OnSpawned();
 	}
 
 	private void SetStats(int level) {

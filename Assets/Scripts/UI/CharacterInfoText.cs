@@ -3,15 +3,15 @@ using UnityEngine.UI;
 
 namespace UI {
 	public class CharacterInfoText : MonoBehaviour {
-		private const float Offset = 36;
+		private const float Offset = 50;
 		[SerializeField] private Text text;
-		[SerializeField] private Image bar;
+		[SerializeField] private RectTransform bar;
 		private float barWidth;
 
 		public Character Character { private get; set; }
 
 		private void Awake() {
-			barWidth = bar.rectTransform.sizeDelta.x;
+			barWidth = bar.sizeDelta.x;
 		}
 
 		private void Update() {
@@ -21,14 +21,14 @@ namespace UI {
 			}
 
 			var charPos = Camera.main.WorldToScreenPoint(Character.transform.position);
-			charPos.y -= Offset;
+			charPos.y += Offset;
 			transform.position = charPos;
 
 			text.text = Character.name;
 
-			var barSize = bar.rectTransform.sizeDelta;
+			var barSize = bar.sizeDelta;
 			barSize.x = Character.Health.Ratio * barWidth;
-			bar.rectTransform.sizeDelta = barSize;
+			bar.sizeDelta = barSize;
 		}
 	}
 }

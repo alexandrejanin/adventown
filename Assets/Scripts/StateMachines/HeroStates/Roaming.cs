@@ -25,7 +25,11 @@ namespace StateMachines.HeroStates {
 			// Look for nearest valid enemy
 			if (nearestEnemy == null)
 				foreach (var enemy in Object.FindObjectsOfType<Enemy>().Where(IsValid))
-					if (nearestEnemy == null || (character.transform.position - enemy.transform.position).magnitude < (character.transform.position - nearestEnemy.transform.position).magnitude)
+					if (
+						nearestEnemy == null ||
+						(character.transform.position - enemy.transform.position).magnitude
+						< (character.transform.position - nearestEnemy.transform.position).magnitude
+					)
 						nearestEnemy = enemy;
 
 			// if enemy found
@@ -37,7 +41,7 @@ namespace StateMachines.HeroStates {
 					return this;
 
 				// if close enough, start combat
-				nearestEnemy.State = new EnemyStates.Combat(nearestEnemy, character);
+				nearestEnemy.StartCombat(character);
 				return new Combat(character, nearestEnemy);
 			}
 

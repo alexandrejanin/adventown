@@ -8,7 +8,7 @@ public abstract class Character : MonoBehaviour {
 
 	public static event EntitySpawned OnEntitySpawned;
 
-	private void Awake() {
+	protected void OnSpawned() {
 		OnEntitySpawned?.Invoke(this);
 	}
 
