@@ -1,10 +1,13 @@
 ﻿using System.Linq;
+using StateMachines.EnemyStates;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace StateMachines.HeroStates {
+	// Hero is idle, looking for their next fight
 	public sealed class Roaming : State<Hero> {
-		private const int MaxLevelDifference = 5;
+		private const int MaxLevelDifference = 3;
+
 		private const float WanderRange = 5;
 		private const float WanderCooldown = 3;
 		private const float CombatDist = 2;
@@ -36,7 +39,10 @@ namespace StateMachines.HeroStates {
 			if (nearestEnemy != null) {
 				wanderTimer = 0;
 
+				// Set enemy as taken, walk towards them
+				((Idle) nearestEnemy.State).Taken = true;
 				agent.SetDestination(nearestEnemy.transform.position);
+				// too far, still return Roaming
 				if ((character.transform.position - nearestEnemy.transform.position).magnitude > CombatDist)
 					return this;
 
@@ -62,7 +68,14 @@ namespace StateMachines.HeroStates {
 		}
 
 		private bool IsValid(Enemy enemy) {
-			return !(enemy.State is EnemyStates.Dead) && Mathf.Abs(character.Level - enemy.Level) < MaxLevelDifference;
+			if (!(enemy.State is Idle state) || state.Taken) {
+				return false;
+			}
+
+			if (Mathf.Abs(character.Level - enemy.Level) > MaxLevelDifference)
+				return false;
+
+			return true;
 		}
 	}
 }
