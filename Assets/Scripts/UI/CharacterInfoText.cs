@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 namespace UI {
 	public class CharacterInfoText : MonoBehaviour {
-		private const float Offset = 50;
 		[SerializeField] private Text text;
 		[SerializeField] private RectTransform bar;
 		private float barWidth;
@@ -20,9 +19,7 @@ namespace UI {
 				return;
 			}
 
-			var charPos = Camera.main.WorldToScreenPoint(Character.transform.position);
-			charPos.y += Offset;
-			transform.position = charPos;
+			transform.position = Camera.main.WorldToScreenPoint(Character.TextPosition.position);
 
 			text.text = Character.name;
 

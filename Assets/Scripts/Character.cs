@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 
 public abstract class Character : MonoBehaviour {
+	[SerializeField] private Transform textPosition;
+
+	public Transform TextPosition => textPosition;
+
 	public ResourceBar Health { get; protected set; }
 	protected abstract int AttackDamage { get; }
 
