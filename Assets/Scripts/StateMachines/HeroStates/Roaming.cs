@@ -25,6 +25,9 @@ namespace StateMachines.HeroStates {
 		}
 
 		public override State<Hero> Update() {
+			if (character.Stamina.Empty)
+				return new GoingHome(character);
+
 			// Look for nearest valid enemy
 			if (nearestEnemy == null)
 				foreach (var enemy in Object.FindObjectsOfType<Enemy>().Where(IsValid))

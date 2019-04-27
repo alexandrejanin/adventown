@@ -6,25 +6,16 @@ public sealed class Hero : Character {
 	public int Level { get; private set; }
 	public int Gold { get; set; }
 
-	public ResourceBar Stamina { get; private set; }
+	public ResourceBar Stamina { get; set; }
 
 	public Weapon Weapon { get; private set; }
 	protected override int AttackDamage => Weapon.Damage;
 
-	private State<Hero> state;
-
-	private State<Hero> State {
-		get => state;
-		set {
-			var oldState = state;
-			state = value;
-			if (oldState != state) OnStateChanged?.Invoke(this, state);
-		}
-	}
+	public State<Hero> State { get; private set; }
 
 	public int Cost => 2 * Level;
 
-	public delegate void OnStateChange(Hero hero, State<Hero> state);
+	public delegate void OnStateChange(Hero hero);
 
 	public event OnStateChange OnStateChanged;
 
@@ -35,7 +26,9 @@ public sealed class Hero : Character {
 	}
 
 	public void Update() {
+		var oldState = State;
 		State = State.Update();
+		if (oldState != State) OnStateChanged?.Invoke(this);
 	}
 
 	public void Spawn(Vector3 position) {
